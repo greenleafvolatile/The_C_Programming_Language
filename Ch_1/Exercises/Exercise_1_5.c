@@ -1,7 +1,7 @@
 /****************************************************************************
  * Exercise 1-5: Modfythe temperture conversin program to print the table in*
  * reverse order, that is, from 300 degrees to 0.                           *
- * @author Daan Pol                                                         *
+ * @author greenleafvolatile                                                *
  * @version 1.0                                                             *
  * @since 22-01-2022                                                        *
  * **************************************************************************/

@@ -1,7 +1,7 @@
 /*********************************************************************************
  * Exercise 1-4: Write a program to print th ecorresponding Celsius to Fahrenheit*
  * table.                                                                        *
- * @author Daan Pol                                                              *
+ * @author greenleafvolatile                                                     *
  * @version 1.0                                                                  *
  * @since 22-01-2022                                                             *
  * *******************************************************************************/
