@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Exercise 1-4: Write a program to print th ecorresponding Celsius to Fahrenheit*
+ * Exercise 1-4: Write a program to print thecorresponding Celsius to Fahrenheit *
  * table.                                                                        *
  * @author greenleafvolatile                                                     *
  * @version 1.0                                                                  *

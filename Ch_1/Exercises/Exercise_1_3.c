@@ -1,10 +1,10 @@
-/*******************************************************************
- * Exercise: 1-3 Modify the temperature conversion program to print*
- * a heading above the table.                                      *
- * @author greenleafvolatile                                       *
- * @version 1.0                                                    *
- * @since 21-01-2022                                               *
- *******************************************************************/
+/********************************************************************
+ * Exercise: 1-3: Modify the temperature conversion program to print*
+ * a heading above the table.                                       *
+ * @author greenleafvolatile                                        *
+ * @version 1.0                                                     *
+ * @since 21-01-2022                                                *
+ ********************************************************************/
 #include <stdio.h>
 
 int
