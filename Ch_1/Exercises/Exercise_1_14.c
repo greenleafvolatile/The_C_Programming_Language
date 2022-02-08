@@ -21,7 +21,6 @@ main(void)
         printf("[%c]:", i);
         for (int j = 0; j < chars[i - '!']; ++j) 
             putchar('*');
-        
         putchar('\n');
     }
     return 0;

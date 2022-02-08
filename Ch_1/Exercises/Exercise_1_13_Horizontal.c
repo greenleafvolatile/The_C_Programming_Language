@@ -31,7 +31,6 @@ main(void)
             for (int j = 0; j < word_lengths[i]; ++j) {
                 putchar('*');
             }
-
             putchar('\n');
         }
     }
