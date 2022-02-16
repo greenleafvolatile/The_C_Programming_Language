@@ -35,6 +35,7 @@ main(void)
     // Capture up to MAXLINE characters from stdin.
     while ((len = get_line(line, MAXLINE)) > 0) {
       
+      // It's not a line.
       if (len == MAXLINE - 1 && line[len - 1] != '\n') {
 
         // Store the first MAXLINE characters so "as much as possible
@@ -44,6 +45,7 @@ main(void)
           
         total_len += len;
 
+      // It's a line.
       } else {
         
         printf("Length: %d\n", len + total_len);
