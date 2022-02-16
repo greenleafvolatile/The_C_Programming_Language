@@ -14,7 +14,7 @@
  * @since 14-02-2022                                                       *
  * *************************************************************************/
 #include <stdio.h>
-#define MAXLINE 3 /* maximum input line size */
+#define MAXLINE 10 /* maximum input line size */
 
 int
 get_line(char [], int);
