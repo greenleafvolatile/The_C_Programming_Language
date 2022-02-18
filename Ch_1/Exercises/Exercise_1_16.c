@@ -14,13 +14,11 @@
  * @since 14-02-2022                                                       *
  * *************************************************************************/
 #include <stdio.h>
+
 #define MAXLINE 10 /* maximum input line size */
 
 int
 get_line(char [], int);
-
-void
-print_line(char [], int);
 
 void
 copy(char [], char[]);
