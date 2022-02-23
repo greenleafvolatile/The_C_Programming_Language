@@ -82,8 +82,6 @@ get_length(char line[])
   return i;
 }
 
-
-
 /* Check if line consistst entirely of blanks and tabs. */
 int
 is_entirely_blank_line(char line[], int len) 
