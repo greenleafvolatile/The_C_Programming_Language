@@ -71,6 +71,7 @@ get_length(char line[])
 {
 
   int i = 0;
+
   while(line[i] != '\0') 
     i++;
   return i;
