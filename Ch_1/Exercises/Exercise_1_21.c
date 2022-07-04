@@ -47,9 +47,7 @@ main(void)
 {
   int ch, column_counted = 0, blanks_counted = 0;
   
-  ch = getchar();
-  
-  while(ch != EOF && ch != '\n') {
+  while((ch = getchar()) != EOF && ch != '\n') {
 
     // Count number of characters inputted.
     // in order to know when a tab should be
@@ -83,7 +81,6 @@ main(void)
       }
       putchar(ch);
     }
-    ch = getchar();
    }
 
    // Handle trailing blanks and lines that 
@@ -100,7 +97,7 @@ void
 put_blank(int number_of_blanks)
 {
   for (int i = 0; i < number_of_blanks; ++i) 
-    putchar('x');
+    putchar(' ');
 }
 
 void
