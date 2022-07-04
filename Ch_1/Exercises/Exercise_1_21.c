@@ -86,7 +86,7 @@ main(void)
     ch = getchar();
    }
 
-   // Handle trailing blanks or lines that 
+   // Handle trailing blanks and lines that 
    // consist solely of blanks.
    if (blanks_counted > 0) {
      entab(ch_counted);
