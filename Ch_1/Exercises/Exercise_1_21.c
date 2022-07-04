@@ -45,7 +45,7 @@ entab(int);
 int
 main(void) 
 {
-  int ch, ch_counted = 0, blanks_counted = 0;
+  int ch, column_counted = 0, blanks_counted = 0;
   
   ch = getchar();
   
@@ -54,7 +54,7 @@ main(void)
     // Count number of characters inputted.
     // in order to know when a tab should be
     // printed.
-    ++ch_counted; 
+    ++column_counted; 
     
     if (ch == ' ') {
       // Count number of blanks inputted
@@ -65,11 +65,11 @@ main(void)
 
       if (blanks_counted > 0) {
 
-        if (ch_counted > TAB_STOP) {
-          entab(ch_counted - 1);
-          put_blank((ch_counted - 1) % TAB_STOP);
-          ch_counted = ch_counted % TAB_STOP;
-        } else if (ch_counted <= TAB_STOP) {
+        if (column_counted > TAB_STOP) {
+          entab(column_counted - 1);
+          put_blank((column_counted - 1) % TAB_STOP);
+          column_counted = column_counted % TAB_STOP;
+        } else if (column_counted <= TAB_STOP) {
           put_blank(blanks_counted);
         }
 
@@ -78,8 +78,8 @@ main(void)
         // Reset the character count when TAB_STOP
         // number of characters have been printed to
         // stdout consecutively.
-      } else if (ch_counted % TAB_STOP == 0) { 
-        ch_counted = 0;
+      } else if (column_counted % TAB_STOP == 0) { 
+        column_counted = 0;
       }
       putchar(ch);
     }
@@ -89,8 +89,8 @@ main(void)
    // Handle trailing blanks and lines that 
    // consist solely of blanks.
    if (blanks_counted > 0) {
-     entab(ch_counted);
-     put_blank(ch_counted % TAB_STOP);
+     entab(column_counted);
+     put_blank(column_counted % TAB_STOP);
    }
 
    return 0;
@@ -104,9 +104,9 @@ put_blank(int number_of_blanks)
 }
 
 void
-entab(int ch_counted)
+entab(int column_counted)
 {
-  for (int i = 0; i < ch_counted / TAB_STOP; ++i) {
+  for (int i = 0; i < column_counted / TAB_STOP; ++i) {
     putchar('\t');
   }
 }
