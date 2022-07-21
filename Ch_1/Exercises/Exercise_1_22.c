@@ -4,15 +4,15 @@
  * @brief
  *
  * Exercise 1-22: "Write a program to "fold" long input line into two or more
- * shorter lines after the last non-whitespace character that occurs before the n-th
+ * shorter lines after the last non-blank character that occurs before the n-th
  * column of input. Make sure your program does something intelligent with very 
  * long lines."
  * 
  * Notes:
  *
- * 1. "[...] after the last non-whitespace character [...]" I took this to mean,
- *    find the last whitespace character, then split the line at the last non-whitespace
- *    character before that whitespace character. For example,  if you were to fold the line
+ * 1. "[...] after the last non-blank character [...]" I took this to mean,
+ *    find the last blank character, then split the line at the last non-blank
+ *    character before that blank character. For example,  if you were to fold the line
  *    "Lorem ipsum sit dolor" after the 14th column, the output should be:
  *
  *    "Lorem ipsum
@@ -27,12 +27,11 @@
  *********************************************/
 // Directives
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <ctype.h>
 
 #define MAX_LINE 100             /* A comment here. */
-#define COLUMN_TO_FOLD_AFTER 10  /* A comment here. */
+#define CLMN_TO_FLD_AFTR 10  /* A comment here. */
 
 // Prototypes
 
@@ -59,7 +58,7 @@ is_in_first_word(int, int,  char *);
  * @brief
  */
 int
-get_index_of_last_non_whitespace_character(int, char *);
+get_indx_of_lst_alpanmrc_char(int, char *);
 
 /**
  * @brief
@@ -71,7 +70,7 @@ fold_line(char *, int);
  * @brief
  */
 int
-is_leading_whitespace(int, int, char *);
+is_leading_blank(int, int, char *);
 
 int
 main(void)
@@ -82,7 +81,7 @@ main(void)
 
   while((line_length = get_line(line, MAX_LINE)) > 0) {
     
-    if (COLUMN_TO_FOLD_AFTER > line_length) {
+    if (CLMN_TO_FLD_AFTR > line_length) {
       fputs(line, stdout);
     } else {
       fold_line(line, line_length);
@@ -96,34 +95,35 @@ void
 fold_line(char *line, int line_length)
 {
   
-  int current_index = 0;
-  int index_of_last_non_whitespace_character = 0;
+  int curr_indx = 0;
+  int indx_of_lst_alpanmrc_char = 0;
   
-  while (current_index < line_length) {
+  while (curr_indx < line_length) {
     
-    // Case 1: if COLUM_TO_FOLD_AFTER is part of the first word of the line,
+    // 1: if CLMN_TO_FLD_AFTR is part of the first word of the line,
     // then split the word. 
-    if (is_in_first_word(current_index, current_index + COLUMN_TO_FOLD_AFTER, line)) {
-      print_line(current_index, current_index + COLUMN_TO_FOLD_AFTER - 1, line);
-      current_index += COLUMN_TO_FOLD_AFTER; 
+    if (is_in_first_word(curr_indx, curr_indx + CLMN_TO_FLD_AFTR, line)) {
+      print_line(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1, line);
+      curr_indx += CLMN_TO_FLD_AFTR; 
     }
     
-    // Case 2: if COLUMN_TO_FOLD_AFTER is a leading blank or if it's the last
-    // or only character in a word, then print from current_index to
-    // COLUMN_TO_FOLD_AFTER.
-    else if (is_leading_whitespace(current_index, COLUMN_TO_FOLD_AFTER - 1, line) || isalpha(line[current_index + COLUMN_TO_FOLD_AFTER - 1]) && isspace(line[current_index + COLUMN_TO_FOLD_AFTER]))
-      print_line(current_index, COLUMN_TO_FOLD_AFTER - 1, line);
-      current_index = COLUMN_TO_FOLD_AFTER;
+    // 2: if CLMN_TO_FLD_AFTR is a leading blank or if it's the last
+    // or only character in a word, then print from curr_indx to
+    // CLMN_TO_FLD_AFTR.
+    else if (is_leading_blank(curr_indx, CLMN_TO_FLD_AFTR - 1, line) || (isalpha(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && isspace(line[curr_indx + CLMN_TO_FLD_AFTR]))) {
+      print_line(curr_indx, CLMN_TO_FLD_AFTR - 1, line);
+      curr_indx = CLMN_TO_FLD_AFTR;
     }
       
-    // Case 3: if COLUMN_TO_FOLD after is non-leading whitespace or any character but the
+    // 3: if CLM_TO_FLD_AFTR is non-leading blank or any character but the
     // last character in a word, then find the index of the last character of the preceding word and
-    // print from current_index up to and including that character.
-    else if (isspace(line[current_index + COLUMN_TO_FOLD_AFTER - 1]) || isalpha(line[current_index + COLUMN_TO_FOLD_AFTER ])) {  
-        index_of_last_non_whitespace_character = get_index_of_last_non_whitespace_character(current_index + COLUMN_TO_FOLD_AFTER, line);
-        print_line(current_index, index_of_last_non_whitespace_character, line);
-        current_index = index_of_last_non_whitespace_character + 1;
+    // print from curr_indx up to and including that character.
+    else if (isspace(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) || isalpha(line[curr_indx + CLMN_TO_FLD_AFTR ])) {  
+        indx_of_lst_alpanmrc_char = get_indx_of_lst_alpanmrc_char(curr_indx + CLMN_TO_FLD_AFTR, line);
+        print_line(curr_indx, indx_of_lst_alpanmrc_char, line);
+        curr_indx = indx_of_lst_alpanmrc_char + 1;
     }
+  }
     
     return;
 }
@@ -134,11 +134,12 @@ get_line(char line[], int line_length)
 
   int ch, i = 0;
 
-  while (i < line_length - 1 && (ch = getchar()) != '\n' && ch != EOF) {
+  while (i < line_length - 1 && (ch = getchar()) != '\n' && ch != EOF) 
     line[i++] = ch;
-  }
+
   if (ch == '\n')
     line[i++] = ch;
+
   line[i] = '\0';
   return i;
 
@@ -148,15 +149,15 @@ void
 print_line(int start_index, int end_index, char *line) 
 {
   for(; start_index <= end_index; ++start_index) {
+
     if (line[start_index] == ' ') {
       fputc('x', stdout);
     } else {
       fputc(line[start_index], stdout);
     }
-
   }
-  fputc('\n', stdout);
 
+  fputc('\n', stdout);
   return;
 }
 
@@ -180,7 +181,7 @@ is_in_first_word(int start_index, int end_index, char *line)
 }
 
 int
-get_index_of_last_non_whitespace_character(int index, char *line)
+get_indx_of_lst_alpanmrc_char(int index, char *line)
 {
   while(isalpha(line[index]))
     --index;
@@ -192,16 +193,16 @@ get_index_of_last_non_whitespace_character(int index, char *line)
 }
 
 int
-is_leading_whitespace(int start_index, int end_index, char *line)
+is_leading_blank(int start_index, int end_index, char *line)
 {
-  int is_leading_whitespace = 1;
+  int is_leading_blank = 1;
 
   for(; end_index >= start_index; --end_index) {
     if (isalpha(line[end_index]))
-      is_leading_whitespace = 0;
+      is_leading_blank = 0;
   }
 
-  return is_leading_whitespace;
+  return is_leading_blank;
 }
 
 
