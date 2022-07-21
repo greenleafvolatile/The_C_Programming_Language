@@ -119,9 +119,9 @@ fold_line(char *line, int line_length)
     // last character in a word, then find the index of the last character of the preceding word and
     // print from curr_indx up to and including that character.
     else if (isspace(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) || isalpha(line[curr_indx + CLMN_TO_FLD_AFTR ])) {  
-        indx_of_lst_alphnmrc_char = get_indx_of_lst_alphnmrc_char(curr_indx + CLMN_TO_FLD_AFTR, line);
-        print_line(curr_indx, indx_of_lst_alphnmrc_char, line);
-        curr_indx = indx_of_lst_alphnmrc_char + 1;
+      indx_of_lst_alphnmrc_char = get_indx_of_lst_alphnmrc_char(curr_indx + CLMN_TO_FLD_AFTR, line);
+      print_line(curr_indx, indx_of_lst_alphnmrc_char, line);
+      curr_indx = indx_of_lst_alphnmrc_char + 1;
     }
   }
   
