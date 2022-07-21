@@ -124,8 +124,8 @@ fold_line(char *line, int line_length)
         curr_indx = indx_of_lst_alphnmrc_char + 1;
     }
   }
-    
-    return;
+  
+  return;
 }
 
 int
