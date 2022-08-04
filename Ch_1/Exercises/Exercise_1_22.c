@@ -31,7 +31,7 @@
 #include <ctype.h>
 
 #define TAB_STOP 8          /* A comment here. */
-#define MAX_LINE 100        /* A comment here. */
+#define MAX_LINE 100         /* A comment here. */
 #define CLMN_TO_FLD_AFTR 14  /* A comment here. */
 
 typedef enum {
@@ -42,7 +42,7 @@ typedef enum {
 // Prototypes
 
 /**
- * @brief Gets input from use and stores in array.
+ * @brief Takes input from user and stores in array.
  *
  */
 int
@@ -90,17 +90,20 @@ main(void)
 
   char line[MAX_LINE];
   int line_length;
-
-  /*line_length = get_line(line, MAX_LINE);
-  expand_tabs(line, &line_length);
-  fputs(line, stdout);*/
   
   while((line_length = get_line(line, MAX_LINE)) > 0) {
     
-    if (CLMN_TO_FLD_AFTR > line_length) {
-      fputs(line, stdout);
+        
+    if (expand_tabs(line, &line_length)) {
+      
+      if (CLMN_TO_FLD_AFTR > line_length) {
+        fputs(line, stdout);
+      } else {
+        fold_line(line, line_length);
+      }
+
     } else {
-      fold_line(line, line_length);
+      return EXIT_FAILURE;
     }
   }
 
@@ -116,8 +119,9 @@ fold_line(const char *line, int line_length)
   
   while (curr_indx < line_length - 1) {
  
-    if ((isspace(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && !is_leading_blank(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1, line)) || 
-       (isalpha(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && isalpha(line[curr_indx + CLMN_TO_FLD_AFTR]) && !is_in_first_word(curr_indx, curr_indx + CLMN_TO_FLD_AFTR, line)))
+    if ((line[curr_indx + CLMN_TO_FLD_AFTR - 1] == ' ' && !is_leading_blank(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1, line)) || 
+       (line[curr_indx + CLMN_TO_FLD_AFTR - 1] != ' ' && line[curr_indx + CLMN_TO_FLD_AFTR] != ' ' && !is_in_first_word(curr_indx, curr_indx + CLMN_TO_FLD_AFTR, line)))
+
     {
       indx_of_lst_non_blank_char = get_indx_of_lst_non_blank_char(curr_indx + CLMN_TO_FLD_AFTR - 1, line);
       print_line(curr_indx, indx_of_lst_non_blank_char, line);
@@ -126,6 +130,9 @@ fold_line(const char *line, int line_length)
       print_line(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1 > line_length ? line_length - 1 : curr_indx + CLMN_TO_FLD_AFTR - 1, line);
       curr_indx = curr_indx + CLMN_TO_FLD_AFTR < line_length ? curr_indx + CLMN_TO_FLD_AFTR : line_length - 1; 
     }
+
+    if (line[curr_indx] != '\n')
+      fputc('\n', stdout);
   }
   
   return;
@@ -190,9 +197,6 @@ print_line(int start_index, int end_index, const char *line)
       fputc(line[start_index], stdout);
     }
   }
-
-  fputc('\n', stdout);
-
   return;
 }
 
@@ -202,11 +206,11 @@ is_in_first_word(int start_index, int end_index, const char *line)
 
   int is_in_first_word = 1;
 
-  while(isspace(line[start_index])) // Account for line with leading blanks.
+  while(line[start_index] == ' ') // Account for line with leading blanks.
       ++start_index;
       
   for (; start_index < end_index; ++start_index) {
-    if (isspace(line[start_index])) {
+    if (line[start_index] == ' ') {
       is_in_first_word = 0;
       break;
     }
@@ -217,10 +221,10 @@ is_in_first_word(int start_index, int end_index, const char *line)
 int
 get_indx_of_lst_non_blank_char(int index, const char *line)
 {
-  while(isalpha(line[index]))
+  while(line[index] != ' ')
     --index;
 
-  while(isspace(line[index]))
+  while(line[index] == ' ')
     --index;
 
   return index;
@@ -232,7 +236,7 @@ is_leading_blank(int start_index, int end_index, const char *line)
   int is_leading_blank = 1;
 
   for(; end_index >= start_index; --end_index) {
-    if (isalpha(line[end_index])) {
+    if (line[end_index] != ' ') {
       is_leading_blank = 0;
       break;
     }
