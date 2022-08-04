@@ -30,8 +30,14 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define MAX_LINE 100             /* A comment here. */
-#define CLMN_TO_FLD_AFTR 10  /* A comment here. */
+#define TAB_STOP 8          /* A comment here. */
+#define MAX_LINE 100        /* A comment here. */
+#define CLMN_TO_FLD_AFTR 14  /* A comment here. */
+
+typedef enum {
+  EXPAND_TABS_FAILED,
+  EXPAND_TABS_SUCCESS
+} error;
 
 // Prototypes
 
@@ -46,31 +52,37 @@ get_line(char *, int);
  * @brief print from start index up to and including end index.
  */
 void
-print_line(int start_index, int end_index, char * line );
+print_line(int start_index, int end_index, const char *line );
 
 /**
  * @brieaf
  */
 int
-is_in_first_word(int, int,  char *);
+is_in_first_word(int, int,  const char *);
 
 /**
  * @brief
  */
 int
-get_indx_of_lst_alphnmrc_char(int, char *);
+get_indx_of_lst_non_blank_char(int, const char *);
 
 /**
  * @brief
  */
 void
-fold_line(char *, int);
+fold_line(const char *, int);
 
 /**
  * @brief
  */
 int
-is_leading_blank(int, int, char *);
+is_leading_blank(int, int, const char *);
+
+/**
+ * @brief
+ */
+error
+expand_tabs(char *, int *);
 
 int
 main(void)
@@ -79,6 +91,10 @@ main(void)
   char line[MAX_LINE];
   int line_length;
 
+  /*line_length = get_line(line, MAX_LINE);
+  expand_tabs(line, &line_length);
+  fputs(line, stdout);*/
+  
   while((line_length = get_line(line, MAX_LINE)) > 0) {
     
     if (CLMN_TO_FLD_AFTR > line_length) {
@@ -92,49 +108,67 @@ main(void)
 }
 
 void
-fold_line(char *line, int line_length)
+fold_line(const char *line, int line_length)
 {
   
   int curr_indx = 0;
-  int indx_of_lst_alphnmrc_char = 0;
+  int indx_of_lst_non_blank_char = 0;
   
-  while (curr_indx < line_length) {
-    
-    // 1: if CLMN_TO_FLD_AFTR is part of the first word of the line,
-    // then split the word. 
-    if (is_in_first_word(curr_indx, curr_indx + CLMN_TO_FLD_AFTR, line)) {
-      print_line(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1, line);
-      curr_indx += CLMN_TO_FLD_AFTR; 
-    }
-    
-    // 2: if CLMN_TO_FLD_AFTR is a leading blank or if it's the last
-    // or only character in a word, then print from curr_indx to
-    // CLMN_TO_FLD_AFTR.
-    else if (is_leading_blank(curr_indx, CLMN_TO_FLD_AFTR - 1, line) || (isalpha(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && isspace(line[curr_indx + CLMN_TO_FLD_AFTR]))) {
-      print_line(curr_indx, CLMN_TO_FLD_AFTR - 1, line);
-      curr_indx = CLMN_TO_FLD_AFTR;
-    }
-      
-    // 3: if CLM_TO_FLD_AFTR is non-leading blank or any character but the
-    // last character in a word, then find the index of the last character of the preceding word and
-    // print from curr_indx up to and including that character.
-    else if (isspace(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) || isalpha(line[curr_indx + CLMN_TO_FLD_AFTR ])) {  
-      indx_of_lst_alphnmrc_char = get_indx_of_lst_alphnmrc_char(curr_indx + CLMN_TO_FLD_AFTR, line);
-      print_line(curr_indx, indx_of_lst_alphnmrc_char, line);
-      curr_indx = indx_of_lst_alphnmrc_char + 1;
+  while (curr_indx < line_length - 1) {
+ 
+    if ((isspace(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && !is_leading_blank(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1, line)) || 
+       (isalpha(line[curr_indx + CLMN_TO_FLD_AFTR - 1]) && isalpha(line[curr_indx + CLMN_TO_FLD_AFTR]) && !is_in_first_word(curr_indx, curr_indx + CLMN_TO_FLD_AFTR, line)))
+    {
+      indx_of_lst_non_blank_char = get_indx_of_lst_non_blank_char(curr_indx + CLMN_TO_FLD_AFTR - 1, line);
+      print_line(curr_indx, indx_of_lst_non_blank_char, line);
+      curr_indx = indx_of_lst_non_blank_char + 1;
+    } else {
+      print_line(curr_indx, curr_indx + CLMN_TO_FLD_AFTR - 1 > line_length ? line_length - 1 : curr_indx + CLMN_TO_FLD_AFTR - 1, line);
+      curr_indx = curr_indx + CLMN_TO_FLD_AFTR < line_length ? curr_indx + CLMN_TO_FLD_AFTR : line_length - 1; 
     }
   }
   
   return;
 }
 
+error
+expand_tabs(char *line, int *line_length)
+{
+  for (int i = 0; i < *line_length; ++i) {
+
+    if (line[i] == '\t') {
+      int number_of_blanks = TAB_STOP - (i % TAB_STOP);
+
+      if (*line_length + number_of_blanks - 1 > MAX_LINE) {
+        return EXPAND_TABS_FAILED;
+      } else {
+
+        if (number_of_blanks > 1) {
+
+          for (int j = *line_length; j > i; --j) {
+            line[j + number_of_blanks - 1] = line[j];
+          }
+        }
+
+        for (int k = i; k < i + number_of_blanks; ++k) {
+          line[k] = 'x';
+        }
+
+        *line_length += number_of_blanks - 1;
+      }
+    }
+  }
+
+  return EXPAND_TABS_SUCCESS;
+}
+
 int
-get_line(char line[], int line_length)
+get_line(char line[], int max_length)
 {
 
   int ch, i = 0;
 
-  while (i < line_length - 1 && (ch = getchar()) != '\n' && ch != EOF) 
+  while (i < max_length - 1 && (ch = getchar()) != '\n' && ch != EOF) 
     line[i++] = ch;
 
   if (ch == '\n')
@@ -146,7 +180,7 @@ get_line(char line[], int line_length)
 }
 
 void
-print_line(int start_index, int end_index, char *line) 
+print_line(int start_index, int end_index, const char *line) 
 {
   for(; start_index <= end_index; ++start_index) {
 
@@ -158,30 +192,30 @@ print_line(int start_index, int end_index, char *line)
   }
 
   fputc('\n', stdout);
+
   return;
 }
 
 int
-is_in_first_word(int start_index, int end_index, char *line)
+is_in_first_word(int start_index, int end_index, const char *line)
 {
 
-  int is_in_first_word = 0;
+  int is_in_first_word = 1;
 
   while(isspace(line[start_index])) // Account for line with leading blanks.
       ++start_index;
       
   for (; start_index < end_index; ++start_index) {
     if (isspace(line[start_index])) {
-      is_in_first_word = 1;
+      is_in_first_word = 0;
       break;
     }
   }
-
   return is_in_first_word;
 }
 
 int
-get_indx_of_lst_alphnmrc_char(int index, char *line)
+get_indx_of_lst_non_blank_char(int index, const char *line)
 {
   while(isalpha(line[index]))
     --index;
@@ -193,15 +227,16 @@ get_indx_of_lst_alphnmrc_char(int index, char *line)
 }
 
 int
-is_leading_blank(int start_index, int end_index, char *line)
+is_leading_blank(int start_index, int end_index, const char *line)
 {
   int is_leading_blank = 1;
 
   for(; end_index >= start_index; --end_index) {
-    if (isalpha(line[end_index]))
+    if (isalpha(line[end_index])) {
       is_leading_blank = 0;
+      break;
+    }
   }
-
   return is_leading_blank;
 }
 
