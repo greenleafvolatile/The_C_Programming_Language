@@ -166,8 +166,7 @@ main(void)
   int line_length;
   
   while((line_length = get_line(line, MAX_LINE)) > 0) {
-    
-        
+  
     if (expand_tabs(line, &line_length)) {
       
       if (CLMN_TO_FLD_AFTR > line_length) {
