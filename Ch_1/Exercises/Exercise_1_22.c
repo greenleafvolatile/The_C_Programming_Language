@@ -61,8 +61,8 @@
 #include <ctype.h>
 
 #define TAB_STOP 8          /* Number of blanks in a tab.*/
-#define MAX_LINE 100        /* Maximum number of characters a user can input is eqaul to MAX_LINE - 1.*/
-#define CLMN_TO_FLD_AFTR 14  /* Column to fold line after.*/
+#define MAX_LINE 100        /* Maximum number of characters a user can input is equal to MAX_LINE - 1.*/
+#define CLMN_TO_FLD_AFTR 14 /* Column to fold line after.*/
 
 typedef enum {
   EXPAND_TABS_FAILED,
