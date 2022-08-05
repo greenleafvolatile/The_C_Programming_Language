@@ -39,8 +39,8 @@
  * 4. If the column to fold after is a blank, but not a leading blank, the line
  *    is split after the last non-blank character (see 1).
  *
- * 5. If the column to fold after is a leading blank, the line is split at the
- *    column to fold after, e.g. (folding after fifth column, x's representing
+ * 5. If the column to fold after is a leading blank, the line is split at said
+ *    column, e.g. (folding after fifth column, x's representing
  *    blanks):
  *
  *    IN:
