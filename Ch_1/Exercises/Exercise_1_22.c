@@ -1,5 +1,6 @@
-/*********************************************
+/*
  * @file Exercise 1-22
+ *
  *
  * @brief
  *
@@ -54,7 +55,7 @@
  * @author greenleafvolatile
  * @version 1.0
  * @since 04-07-2022
- *********************************************/
+ */
 // Directives
 #include <stdio.h>
 #include <stdlib.h>
