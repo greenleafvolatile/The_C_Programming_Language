@@ -40,7 +40,7 @@ put_blank(int);
  * @return void.
  */
 void
-entab(int);
+put_tab(int);
 
 int
 main(void) 
@@ -49,22 +49,16 @@ main(void)
   
   while((ch = getchar()) != EOF && ch != '\n') {
 
-    // Count number of characters inputted.
-    // in order to know when a tab should be
-    // printed.
     ++column_counted; 
     
     if (ch == ' ') {
-      // Count number of blanks inputted
-      // in order to know if a tab should
-      // be printed.
       ++blanks_counted;
     } else if (ch != ' ') {
 
       if (blanks_counted > 0) {
 
         if (column_counted > TAB_STOP) {
-          entab(column_counted - 1);
+          put_tab(column_counted - 1);
           put_blank((column_counted - 1) % TAB_STOP);
           column_counted = column_counted % TAB_STOP;
         } else if (column_counted <= TAB_STOP) {
@@ -86,7 +80,7 @@ main(void)
    // Handle trailing blanks and lines that 
    // consist solely of blanks.
    if (blanks_counted > 0) {
-     entab(column_counted);
+     put_tab(column_counted);
      put_blank(column_counted % TAB_STOP);
    }
 
@@ -98,14 +92,16 @@ put_blank(int number_of_blanks)
 {
   for (int i = 0; i < number_of_blanks; ++i) 
     putchar(' ');
+  return;
 }
 
 void
-entab(int column_counted)
+put_tab(int column_counted)
 {
   for (int i = 0; i < column_counted / TAB_STOP; ++i) {
     putchar('\t');
   }
+  return;
 }
      
 
