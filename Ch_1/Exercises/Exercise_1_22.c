@@ -92,6 +92,8 @@ get_line(char *, int);
  * @param the end index.
  *
  * @param char * pointer to char array.
+ *
+ * @return void.
  */
 void
 print_line(int, int, const char *);
@@ -128,6 +130,8 @@ get_indx_of_lst_non_blnk_char(int, const char *);
  * @param char * pointer to char array.
  *
  * @param int length of input line.
+ *
+ * @return void.
  */
 void
 fold_line(const char *, int);
