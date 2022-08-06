@@ -1,7 +1,6 @@
 /*
  * @file Exercise 1-22
  *
- *
  * @brief
  *
  * Exercise 1-22: "Write a program to "fold" long input line into two or more
