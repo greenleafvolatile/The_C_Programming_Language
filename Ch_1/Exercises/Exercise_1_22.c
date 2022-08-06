@@ -63,7 +63,7 @@
 
 #define TAB_STOP 8          /* Number of blanks in a tab.*/
 #define MAX_LINE 100        /* Maximum number of characters a user can input is equal to MAX_LINE - 1.*/
-#define CLMN_TO_FLD_AFTR 14 /* Column to fold line after.*/
+#define CLMN_TO_FLD_AFTR 1 /* Column to fold line after.*/
 
 typedef enum {
   EXPAND_TABS_FAILED,
@@ -209,7 +209,7 @@ fold_line(const char *line, int line_length)
     } else {
       
       print_line(curr_indx, fldng_indx, line);
-      curr_indx = curr_indx + CLMN_TO_FLD_AFTR;
+      curr_indx += CLMN_TO_FLD_AFTR;
     }
   }
   return;
@@ -218,6 +218,7 @@ fold_line(const char *line, int line_length)
 error
 expand_tabs(char *line, int *line_length)
 {
+
   for (int i = 0; i < *line_length; ++i) {
 
     if (line[i] == '\t') {
@@ -262,6 +263,7 @@ get_line(char line[], int max_length)
 void
 print_line(int start_index, int end_index, const char *line) 
 {
+
   for(; start_index <= end_index; ++start_index) 
     fputc(line[start_index], stdout);
 
@@ -290,6 +292,7 @@ is_in_first_word(int start_index, int end_index, const char *line)
 int
 get_indx_of_lst_non_blnk_char(int index, const char *line)
 {
+
   while(line[index] != ' ')
     --index;
 
@@ -302,6 +305,7 @@ get_indx_of_lst_non_blnk_char(int index, const char *line)
 int
 is_leading_blank(int start_index, int end_index, const char *line)
 {
+
   int is_leading_blank = 1;
 
   for(; end_index >= start_index; --end_index) {
