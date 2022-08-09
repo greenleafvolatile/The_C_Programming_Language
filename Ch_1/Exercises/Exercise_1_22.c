@@ -8,7 +8,7 @@
  * column of input. Make sure your program does something intelligent with very 
  * long lines."
  * 
- * Notes:
+ * Requirements:
  *
  * 1. "[...] after the last non-blank character [...]" I took this to mean,
  *    find the last blank character, then split the line at the last non-blank
