@@ -235,7 +235,7 @@ expand_tabs(char *line, int *line_length)
         }
 
         for (int k = i; k < i + number_of_blanks; ++k) {
-          line[k] = 'x';
+          line[k] = ' ';
         }
 
         *line_length += number_of_blanks - 1;
